@@ -56,16 +56,30 @@ class MyHomePage extends HookConsumerWidget {
           milliseconds: 500,
         ),
         color: _moodColor(type),
-        child: Stack(
+        child: Column(
           children: [
-            CustomPaint(
-              size: Size.infinite,
-              painter: MoodTypePainter(),
+            Flexible(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: 32.0,
+                    right: 32.0,
+                    bottom: 32.0,
+                    top: 64,
+                  ),
+                  child: CustomPaint(
+                    size: Size.infinite,
+                    painter: MoodTypePainter(),
+                  ),
+                ),
+              ),
             ),
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: MoodType.values.map((t) => MoodButton(t)).toList(),
+            Flexible(
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: MoodType.values.map((t) => MoodButton(t)).toList(),
+                ),
               ),
             ),
           ],
@@ -122,15 +136,23 @@ class MoodTypePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = size / 2;
-    var paint = Paint()
+    final third = size / 3;
+    final circlePaint = Paint()
       ..color = Colors.black
-      ..strokeWidth = 20.0;
+      ..strokeWidth = 10.0
+      ..style = PaintingStyle.stroke;
 
-    //canvas.drawCircle(Offset(center.width, center.height), 10, paint);
-    print("tez: center.width = ${center.width} center.height = ${center.height}");
-    print("tez: size.width = ${size.width} size.height = ${size.height}");
-    canvas.drawLine(Offset(0, 0), Offset(size.width, size.height), paint);
-    canvas.drawLine(Offset(size.height, size.width), Offset(size.width, size.height), paint);
+    final eyePaint = Paint()..color = Colors.black;
+
+    canvas.drawCircle(
+        Offset(center.width, center.height), center.width, circlePaint);
+
+    canvas.drawCircle(Offset(third.width, third.height + 20), 20, eyePaint);
+    canvas.drawCircle(
+        Offset(size.width - third.width, third.height), 20, eyePaint);
+
+    canvas.drawLine(Offset(third.width, third.height * 2),
+        Offset(third.width * 2, third.height * 2), circlePaint);
   }
 
   @override
