@@ -8,7 +8,7 @@ import 'package:mood_tracker/app/heads/average.dart';
 import 'package:mood_tracker/app/heads/happy.dart';
 
 final moodTypeProvider = StateProvider.autoDispose<MoodType>(
-  (_) => MoodType.excellent,
+  (_) => MoodType.average,
 );
 
 void main() {
