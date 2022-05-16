@@ -265,8 +265,8 @@ class AveragePainter extends CustomPainter {
         width: 90,
         height: 90,
       ),
-      -7 * pi / 12,
-      pi / 6,
+      -2 * pi / 3,
+      pi / 5,
       false,
       eyeBrowPaint,
     );
@@ -277,8 +277,8 @@ class AveragePainter extends CustomPainter {
         width: 90,
         height: 90,
       ),
-      -5 * pi / 12,
-      -pi / 6,
+      -pi / 3,
+      -pi / 5,
       false,
       eyeBrowPaint,
     );
