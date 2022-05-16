@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -69,7 +70,7 @@ class MyHomePage extends HookConsumerWidget {
                   ),
                   child: CustomPaint(
                     size: Size.infinite,
-                    painter: MoodTypePainter(),
+                    painter: _moodPaint(type),
                   ),
                 ),
               ),
@@ -102,6 +103,15 @@ class MyHomePage extends HookConsumerWidget {
         return MoodTrackerTheme.blue;
     }
   }
+
+  CustomPainter? _moodPaint(MoodType type) {
+    switch (type) {
+      case MoodType.happy:
+        return HappyPainter();
+      default:
+        return AveragePainter();
+    }
+  }
 }
 
 class MoodButton extends HookConsumerWidget {
@@ -132,27 +142,146 @@ class MoodButton extends HookConsumerWidget {
   }
 }
 
-class MoodTypePainter extends CustomPainter {
+class HappyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final center = size / 2;
     final third = size / 3;
+
+    // head outline
     final circlePaint = Paint()
       ..color = Colors.black
       ..strokeWidth = 10.0
       ..style = PaintingStyle.stroke;
 
+    canvas.drawCircle(
+        Offset(center.width, center.height), center.width, circlePaint);
+
+    // mouth
+    final mouthPaint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 10.0;
+
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(center.width, third.height * 2),
+        width: third.width - 30,
+        height: 60,
+      ),
+      0,
+      pi,
+      true,
+      mouthPaint,
+    );
+
+    // eyes
     final eyePaint = Paint()..color = Colors.black;
+
+    canvas.drawCircle(Offset(third.width, third.height + 20), 20, eyePaint);
+    canvas.drawCircle(
+        Offset(size.width - third.width, third.height + 20), 20, eyePaint);
+
+    // eyebrows
+    final eyeBrowPaint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 10
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(third.width, third.height + 20),
+        width: 90,
+        height: 90,
+      ),
+      -2 * pi / 3,
+      pi / 4,
+      false,
+      eyeBrowPaint,
+    );
+
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(size.width - third.width, third.height + 20),
+        width: 90,
+        height: 90,
+      ),
+      -pi / 3,
+      -pi / 4,
+      false,
+      eyeBrowPaint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class AveragePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = size / 2;
+    final third = size / 3;
+
+    // head outline
+    final circlePaint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 10.0
+      ..style = PaintingStyle.stroke;
 
     canvas.drawCircle(
         Offset(center.width, center.height), center.width, circlePaint);
 
-    canvas.drawCircle(Offset(third.width, third.height + 20), 20, eyePaint);
-    canvas.drawCircle(
-        Offset(size.width - third.width, third.height), 20, eyePaint);
+    // mouth
+    final mouthPaint = Paint()
+      ..color = Colors.black
+      ..strokeWidth = 10.0
+      ..strokeCap = StrokeCap.round;
 
-    canvas.drawLine(Offset(third.width, third.height * 2),
-        Offset(third.width * 2, third.height * 2), circlePaint);
+    canvas.drawLine(
+      Offset(third.width + 30, third.height * 2),
+      Offset((third.width * 2) - 30, third.height * 2),
+      mouthPaint,
+    );
+
+    // eyes
+    final eyePaint = Paint()..color = Colors.black;
+
+    canvas.drawCircle(Offset(third.width, third.height + 40), 20, eyePaint);
+    canvas.drawCircle(
+        Offset(size.width - third.width, third.height + 40), 20, eyePaint);
+
+    // eyebrows
+    // 1rad × 180/π = 57,296°
+    final eyeBrowPaint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 10
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(third.width, third.height + 40),
+        width: 90,
+        height: 90,
+      ),
+      -7 * pi / 12,
+      pi / 6,
+      false,
+      eyeBrowPaint,
+    );
+
+    canvas.drawArc(
+      Rect.fromCenter(
+        center: Offset(size.width - third.width, third.height + 40),
+        width: 90,
+        height: 90,
+      ),
+      -5 * pi / 12,
+      -pi / 6,
+      false,
+      eyeBrowPaint,
+    );
   }
 
   @override
